@@ -51,7 +51,6 @@ func main() {
 	scanner := bufio.NewScanner(file)
 	in := make(chan string)
 	out := make(chan string)
-	// wg.Add(1)
 	go writeResults(&wg, out)
 	for scanner.Scan() {
 		wg.Add(1)
