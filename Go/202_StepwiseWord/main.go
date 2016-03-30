@@ -21,9 +21,9 @@ func stepwiseWord(word string) (result string) {
 	for k := 0; k < len(word); k++ {
 		tmp := ""
 		for i := 0; i < k; i++ {
-			tmp = "*" + tmp
+			tmp = strings.Join(append([]string{"*", tmp}), "")
 		}
-		result = result + tmp + string(word[k]) + " "
+		result = strings.Join(append([]string{result, tmp, string(word[k]), " "}), "")
 	}
 	return
 }
