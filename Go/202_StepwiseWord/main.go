@@ -18,18 +18,27 @@ func maxLenWord(words []string) (longest string) {
 	return
 }
 
-func stepwiseWord(wg *sync.WaitGroup, words <-chan string, out chan string) {
+func generateReuslt(word string) (answer string) {
+	for k := 0; k < len(word); k++ {
+		tmp := ""
+		for i := 0; i < k; i++ {
+			tmp = strings.Join(append([]string{"*", tmp}), "")
+		}
+		answer = strings.Join(append([]string{answer, tmp, string(word[k]), " "}), "")
+	}
+	return
+}
+
+func stepwiseWord(wg *sync.WaitGroup, words chan string, out chan string) {
 	defer wg.Done()
 	result := ""
-	for i := range words {
-		longest := maxLenWord(strings.Split(i, " "))
-		for k := 0; k < len(longest); k++ {
-			tmp := ""
-			for i := 0; i < k; i++ {
-				tmp = strings.Join(append([]string{"*", tmp}), "")
-			}
-			result = strings.Join(append([]string{result, tmp, string(longest[k]), " "}), "")
+	select {
+	case word := <-words:
+		if word == "done" {
+			return
 		}
+		longest := maxLenWord(strings.Split(word, " "))
+		result = generateReuslt(longest)
 		out <- result
 	}
 }
